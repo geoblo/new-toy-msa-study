@@ -1,13 +1,11 @@
-package org.example.apigatewayservice.filter;
+package org.example.apigatewayservice.config;
 
 import org.springframework.cloud.gateway.route.RouteLocator;
 import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 
 // 필터 설정 - 자바 코드
-@Configuration
+//@Configuration
 public class FilterConfig {
 
     Environment env;
@@ -16,7 +14,7 @@ public class FilterConfig {
         this.env = env;
     }
 
-    @Bean
+//    @Bean
     public RouteLocator getRouteLocator(RouteLocatorBuilder builder) {
         return builder.routes()
                 .route(r -> r.path("/first-service/**")
