@@ -20,6 +20,12 @@ spring:
       server:
 #        webmvc:
         webflux:
+          default-filters:
+            - name: GlobalFilter
+              args:
+                baseMessage: Spring Cloud Gateway Webflux Global Filter
+                preLogger: true
+                postLogger: true
           routes:
             - id: first-service
               uri: http://localhost:8081/
@@ -27,13 +33,15 @@ spring:
                 - Path=/first-service/**
               # 필터 설정 - 프로퍼티
               filters:
-                - AddRequestHeader=f-request, 1st-request-header-by-yaml
-                - AddResponseHeader=f-response, 1st-response-header-from-yaml
+#                - AddRequestHeader=f-request, 1st-request-header-by-yaml
+#                - AddResponseHeader=f-response, 1st-response-header-from-yaml
+                - CustomFilter
             - id: second-service
               uri: http://localhost:8082/
               predicates:
                 - Path=/second-service/**
               # 필터 설정 - 프로퍼티
               filters:
-                - AddRequestHeader=s-request, 2nd-request-header-by-yaml
-                - AddResponseHeader=s-response, 2nd-response-header-from-yaml
+#                - AddRequestHeader=s-request, 2nd-request-header-by-yaml
+#                - AddResponseHeader=s-response, 2nd-response-header-from-yaml
+                - CustomFilter
