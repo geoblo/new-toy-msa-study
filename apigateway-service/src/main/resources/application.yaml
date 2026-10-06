@@ -1,0 +1,32 @@
+server:
+  port: 8000
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+  instance:
+    prefer-ip-address: true # 호스트명 대신 IP로 등록
+    instance-id: ${spring.application.name}:${spring.cloud.client.ip-address}:${server.port}
+
+spring:
+  application:
+    name: apigateway-service
+  # 라우팅 정보 등록
+  cloud:
+    gateway:
+      server:
+#        webmvc:
+        webflux:
+          routes:
+            - id: first-service
+              uri: http://localhost:8081/
+              predicates:
+                - Path=/first-service/**
+            - id: second-service
+              uri: http://localhost:8082/
+              predicates:
+                - Path=/second-service/**
+
