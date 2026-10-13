@@ -1,0 +1,7 @@
+encrypt:
+#  key: abcdefghijklmnopqrstuvwxyz1234567890
+  key-store:
+    # jks 파일이 저장된 경로로 수정
+    location: file:///D:/lg6th/keystore/apiEncryptionKey.jks
+    password: 1q2w3e4r
+    alias: apiEncryptionKey
