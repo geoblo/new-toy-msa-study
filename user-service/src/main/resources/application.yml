@@ -1,0 +1,62 @@
+server:
+#  port: 0
+  port: 8083 # 실습 편의상 고정
+
+spring:
+  application:
+    name: user-service
+#  config:
+#    import: optional:configserver:http://localhost:8888
+#  cloud:
+#    config:
+#      name: ecommerce
+  h2:
+    console:
+      enabled: true
+      settings:
+        web-allow-others: true
+      path: /h2-console
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;
+    username: sa
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: update
+  security:
+    user:
+      name: user
+      password: $2a$10$ihI.uObUGvEsXUVdtBS/FeDkeFmLARmxrJRtlgbrouufb/qkGlrV.
+#      password: "{bcrypt}$2a$10$ihI.uObUGvEsXUVdtBS/FeDkeFmLARmxrJRtlgbrouufb/qkGlrV."
+
+logging:
+  level:
+    org.springframework.security: DEBUG
+
+eureka:
+  instance:
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+    prefer-ip-address: true # 호스트명 대신 IP로 등록
+  client:
+    service-url:
+      defaultZone: http://127.0.0.1:8761/eureka
+    fetch-registry: true
+    register-with-eureka: true
+
+greeting:
+  message: Welcome to the Simple E-commerce.
+
+#token:
+#  expiration-time: 86400000 # 1 days
+#  secret: my-very-long-secret-key-1234567890123456
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include:
+          - refresh
+          - health
+          - beans
+          - info

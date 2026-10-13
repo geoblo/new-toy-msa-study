@@ -1,0 +1,40 @@
+server:
+  port: 0
+
+spring:
+  application:
+    name: catalog-service
+  h2:
+    console:
+      enabled: true
+      settings:
+        web-allow-others: true
+      path: /h2-console
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;
+    username: sa
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+    generate-ddl: true
+    database: h2
+    defer-datasource-initialization: true # data.sql / schema.sql 실행을 Hibernate가 테이블을 만든 뒤로 미루는 설정
+    # Spring Boot 2.5에서 초기화 순서가 바뀐 게 발단 (data.sql 실행 → Hibernate가 테이블 생성)
+    # 이 설정을 안쓰려면 DDL을 schema.sql에 넣으면 되는데 현재는 강의 및 실습 편의를 위해 그대로 둘 것임
+
+eureka:
+  instance:
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+    prefer-ip-address: true # 호스트명 대신 IP로 등록
+  client:
+    service-url:
+      defaultZone: http://127.0.0.1:8761/eureka
+    fetch-registry: true
+    register-with-eureka: true
+
+logging:
+  level:
+    org.springframework.security: DEBUG

@@ -1,0 +1,14 @@
+server:
+  port: 8888
+
+spring:
+  application:
+    name: config-service
+  cloud:
+    config:
+      server:
+        git: # default
+          # uri: 각자 경로에 맞춰서 수정
+#          uri: file:///Users/welabs/Desktop/Work/git-local-repo # macOS
+          uri: file:///D:/lg6th/work/git-local-repo # Windows
+          default-label: main # 각자 git branch로 확인
