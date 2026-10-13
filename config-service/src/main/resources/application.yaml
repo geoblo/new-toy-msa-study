@@ -4,11 +4,29 @@ server:
 spring:
   application:
     name: config-service
+  rabbitmq:
+    host: 127.0.0.1
+    port: 5672
+    username: guest
+    password: guest
   cloud:
     config:
       server:
         git: # default
           # uri: 각자 경로에 맞춰서 수정
 #          uri: file:///Users/welabs/Desktop/Work/git-local-repo # macOS
-          uri: file:///D:/lg6th/work/git-local-repo # Windows
+#          uri: file:///D:/lg6th/work/git-local-repo # Windows
+          uri: https://github.com/geoblo/spring-cloud-config.git # GitHub
+#          username: [username]
+#          password: [password]
           default-label: main # 각자 git branch로 확인
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include:
+          - health
+          - busrefresh
+
+

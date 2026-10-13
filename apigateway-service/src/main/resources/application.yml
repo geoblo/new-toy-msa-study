@@ -15,6 +15,11 @@ eureka:
 spring:
   application:
     name: apigateway-service
+  rabbitmq:
+    host: 127.0.0.1
+    port: 5672
+    username: guest
+    password: guest
   cloud:
     gateway:
       server:
@@ -39,6 +44,15 @@ spring:
               predicates:
                 - Path=/user-service/login
                 - Method=POST
+              filters:
+                - RemoveRequestHeader=Cookie
+                - RewritePath=/user-service/(?<segment>.*), /$\{segment}
+            # Spring Cloud Bus + Actuator 추가 (인증 없이 통과)
+            - id: user-service-actuator
+              uri: lb://USER-SERVICE
+              predicates:
+                - Path=/user-service/actuator/**
+                - Method=GET,POST
               filters:
                 - RemoveRequestHeader=Cookie
                 - RewritePath=/user-service/(?<segment>.*), /$\{segment}
@@ -94,3 +108,4 @@ management:
           - beans
           - info
           - httpexchanges
+          - busrefresh
