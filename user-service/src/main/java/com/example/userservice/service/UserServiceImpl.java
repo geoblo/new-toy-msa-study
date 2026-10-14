@@ -7,12 +7,16 @@ import com.example.userservice.vo.ResponseOrder;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.env.Environment;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,10 +31,16 @@ public class UserServiceImpl implements UserService {
 
     BCryptPasswordEncoder passwordEncoder;
 
-    public UserServiceImpl(Environment env, UserRepository userRepository, BCryptPasswordEncoder passwordEncoder) {
+    RestTemplate restTemplate;
+
+    public UserServiceImpl(Environment env,
+                           UserRepository userRepository,
+                           BCryptPasswordEncoder passwordEncoder,
+                           RestTemplate restTemplate) {
         this.env = env;
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.restTemplate = restTemplate;
     }
 
     @Override
@@ -71,7 +81,18 @@ public class UserServiceImpl implements UserService {
 
         UserDto userDto = new ModelMapper().map(userEntity, UserDto.class);
 
-        List<ResponseOrder> orderList = new ArrayList<>();
+        // 초기에 임시로 빈 리스트 저장
+//        List<ResponseOrder> orderList = new ArrayList<>();
+
+        /* using a rest template */
+        // 주문 서비스와 통신 - 사용자의 주문 내역 조회
+        String orderUrl = String.format(env.getProperty("order-service.url"), userId);
+        ResponseEntity<List<ResponseOrder>> orderListResponse =
+                restTemplate.exchange(orderUrl, HttpMethod.GET, null,
+                    new ParameterizedTypeReference<List<ResponseOrder>>() {
+                });
+        List<ResponseOrder> orderList = orderListResponse.getBody(); // 실제 주문 내역
+
         userDto.setOrders(orderList);
 
         return userDto;
