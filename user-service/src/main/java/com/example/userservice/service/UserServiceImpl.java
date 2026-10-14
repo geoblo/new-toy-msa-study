@@ -1,9 +1,11 @@
 package com.example.userservice.service;
 
+import com.example.userservice.client.OrderServiceClient;
 import com.example.userservice.dto.UserDto;
 import com.example.userservice.jpa.UserEntity;
 import com.example.userservice.jpa.UserRepository;
 import com.example.userservice.vo.ResponseOrder;
+import feign.FeignException;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
@@ -33,14 +35,18 @@ public class UserServiceImpl implements UserService {
 
     RestTemplate restTemplate;
 
+    OrderServiceClient orderServiceClient;
+
     public UserServiceImpl(Environment env,
                            UserRepository userRepository,
                            BCryptPasswordEncoder passwordEncoder,
-                           RestTemplate restTemplate) {
+                           RestTemplate restTemplate,
+                           OrderServiceClient orderServiceClient) {
         this.env = env;
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.restTemplate = restTemplate;
+        this.orderServiceClient = orderServiceClient;
     }
 
     @Override
@@ -86,12 +92,23 @@ public class UserServiceImpl implements UserService {
 
         /* using a rest template */
         // 주문 서비스와 통신 - 사용자의 주문 내역 조회
-        String orderUrl = String.format(env.getProperty("order-service.url"), userId);
-        ResponseEntity<List<ResponseOrder>> orderListResponse =
-                restTemplate.exchange(orderUrl, HttpMethod.GET, null,
-                    new ParameterizedTypeReference<List<ResponseOrder>>() {
-                });
-        List<ResponseOrder> orderList = orderListResponse.getBody(); // 실제 주문 내역
+//        String orderUrl = String.format(env.getProperty("order-service.url"), userId);
+//        ResponseEntity<List<ResponseOrder>> orderListResponse =
+//                restTemplate.exchange(orderUrl, HttpMethod.GET, null,
+//                    new ParameterizedTypeReference<List<ResponseOrder>>() {
+//                });
+//        List<ResponseOrder> orderList = orderListResponse.getBody(); // 실제 주문 내역
+
+        /* using a open feign */
+//        List<ResponseOrder> orderList = orderServiceClient.getOrders(userId);
+
+        /* feign error handling */
+        List<ResponseOrder> orderList = null;
+        try {
+            orderList = orderServiceClient.getOrders(userId);
+        } catch (FeignException e) {
+            log.error(e.getMessage());
+        }
 
         userDto.setOrders(orderList);
 

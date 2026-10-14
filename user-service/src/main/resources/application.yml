@@ -38,6 +38,7 @@ spring:
 logging:
   level:
     org.springframework.security: DEBUG
+    com.example.userservice.client: DEBUG
 
 eureka:
   instance:
