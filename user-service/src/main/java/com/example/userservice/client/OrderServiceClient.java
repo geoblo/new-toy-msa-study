@@ -13,8 +13,8 @@ import java.util.List;
 public interface OrderServiceClient {
 
     // GET http://localhost:8000/order-service/9410e078-ce73-44e1-8647-c0b4437b2c64/orders
-//    @GetMapping("/order-service/{userId}/orders")
-    @GetMapping("/order-service/{userId}/orders-ng") // 에러 핸들링 테스트용
+    @GetMapping("/order-service/{userId}/orders")
+//    @GetMapping("/order-service/{userId}/orders-ng") // 에러 핸들링 테스트용
     List<ResponseOrder> getOrders(@PathVariable("userId") String userId);
 
 }
