@@ -13,13 +13,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 // Kafka Consumer의 Configuration 정보를 구성하는 클래스
-@EnableKafka
-@Configuration
+//@EnableKafka
+//@Configuration
 public class KafkaConsumerConfig {
 
     // ConsumerFactory: Kafka 브로커 접속 정보와 컨슈머 설정(그룹 ID, 역직렬화 방식 등)을 담아
     // KafkaConsumer 객체를 생성하는 팩토리 빈 (토픽은 @KafkaListener에서 지정)
-    @Bean
+//    @Bean
     public ConsumerFactory<String, String> consumerFactory() { // <String, String>은 키, 밸뷰 타입
         Map<String, Object> properties = new HashMap<>();
         properties.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092"); // kafka 서버의 주소
@@ -44,7 +44,7 @@ public class KafkaConsumerConfig {
 
     // KafkaListenerContainerFactory: 토픽에 어떤 변경사항이 있는지 계속 리스닝하고 있는,
     // 즉 이벤트가 발생했을 때 그걸 캐치할 수 있는 리스너 컨테이너를 생성하는 팩토리
-    @Bean
+//    @Bean
     public ConcurrentKafkaListenerContainerFactory<String, String> kafkaListenerContainerFactory() {
         ConcurrentKafkaListenerContainerFactory<String, String> kafkaListenerContainerFactory
                 = new ConcurrentKafkaListenerContainerFactory<>();
