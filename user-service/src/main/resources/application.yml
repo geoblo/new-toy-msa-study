@@ -10,6 +10,9 @@ spring:
     port: 5672
     username: guest
     password: guest
+  zipkin:
+    base-url: http://127.0.0.1:9411
+    enabled: true
 #  config:
 #    import: optional:configserver:http://localhost:8888
 #  cloud:
@@ -39,6 +42,9 @@ logging:
   level:
     org.springframework.security: DEBUG
     com.example.userservice.client: DEBUG
+  # 패턴 설정을 안해도 기본 패턴에 traceId/spanId가 출력됨
+#  pattern:
+#    correlation: '[${spring.application.name:},%X{traceId:-},%X{spanId:-}] '
 
 eureka:
   instance:
@@ -58,6 +64,16 @@ greeting:
 #  secret: my-very-long-secret-key-1234567890123456
 
 management:
+  tracing:
+    sampling:
+      probability: 1.0 # 100% 다 전달
+    propagation: # 모든 서비스가 같은 형식을 써야 추적이 끊기지 않음
+      consume: B3
+      produce: B3
+  zipkin:
+    tracing:
+      # Zipkin 서버에 로그를 전달 및 저장하고자 할 때 쓰일 엔드포인트
+      endpoint: http://localhost:9411/api/v2/spans
   endpoints:
     web:
       exposure:

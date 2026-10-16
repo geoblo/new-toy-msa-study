@@ -4,6 +4,9 @@ server:
 spring:
   application:
     name: order-service
+  zipkin:
+    base-url: http://127.0.0.1:9411
+    enabled: true
   kafka:
     bootstrap-servers: localhost:9092
     producer:
@@ -37,3 +40,15 @@ eureka:
 logging:
   level:
     org.springframework.security: DEBUG
+
+management:
+  tracing:
+    sampling:
+      probability: 1.0 # 100% 다 전달
+    propagation: # 모든 서비스가 같은 형식을 써야 추적이 끊기지 않음
+      consume: B3
+      produce: B3
+  zipkin:
+    tracing:
+      # Zipkin 서버에 로그를 전달 및 저장하고자 할 때 쓰일 엔드포인트
+      endpoint: http://localhost:9411/api/v2/spans

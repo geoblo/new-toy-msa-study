@@ -72,13 +72,20 @@ public class OrderController {
         });
 
         /* 타임 리미터 4초가 동작하는지 테스트 */
+//        try {
+//            Random rnd = new Random();
+//            int value = rnd.nextInt(5);
+//            if (value % 2 == 0) {
+//                Thread.sleep(10000);
+//                throw new Exception("장애 발생 - Timeout");
+//            }
+//        } catch (InterruptedException e) {
+//            log.warn(e.getMessage());
+//        }
+        /* 분산 추적에서 오류가 발생했을 때 테스트 */
         try {
-            Random rnd = new Random();
-            int value = rnd.nextInt(5);
-            if (value % 2 == 0) {
-                Thread.sleep(10000);
-                throw new Exception("장애 발생 - Timeout");
-            }
+            Thread.sleep(10000);
+            throw new Exception("장애 발생");
         } catch (InterruptedException e) {
             log.warn(e.getMessage());
         }
