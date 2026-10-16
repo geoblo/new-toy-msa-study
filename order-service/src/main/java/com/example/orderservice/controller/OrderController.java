@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 @RestController
 @RequestMapping("/order-service")
@@ -69,6 +70,18 @@ public class OrderController {
         orderList.forEach(v -> {
             result.add(new ModelMapper().map(v, ResponseOrder.class));
         });
+
+        /* 타임 리미터 4초가 동작하는지 테스트 */
+        try {
+            Random rnd = new Random();
+            int value = rnd.nextInt(5);
+            if (value % 2 == 0) {
+                Thread.sleep(10000);
+                throw new Exception("장애 발생 - Timeout");
+            }
+        } catch (InterruptedException e) {
+            log.warn(e.getMessage());
+        }
 
         log.info("Add retrieved orders data");
 
